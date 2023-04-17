@@ -8,18 +8,13 @@ namespace EFWeb.Pages
     {
         private readonly ILogger<IndexModel> _logger;
 
-        private readonly MyBlogContext _myBlogContext;
-
-        public IndexModel(ILogger<IndexModel> logger, MyBlogContext myBlogContext)
+        public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
-            _myBlogContext = myBlogContext;
         }
 
         public void OnGet()
         {
-            var posts = _myBlogContext.articles.OrderByDescending(a => a.Created).ToList();
-            ViewData["posts"] = posts;
         }
     }
 }

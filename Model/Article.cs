@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EFWeb.Model
@@ -9,16 +10,19 @@ namespace EFWeb.Model
         [Key]
         public int Id { get; set; }
 
-        [StringLength(255)]
-        [Required]
+        [StringLength(255, MinimumLength = 5, ErrorMessage = "Length must be greater than {2} characters.")]
+        [Required(ErrorMessage = "{0} is null")]
         [Column(TypeName = "nvarchar")]
+        [DisplayName("Tiêu đề")]
         public string Title { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "{0} is null")]
         [DataType(DataType.Date)]
+        [DisplayName("Ngày tạo")]
         public DateTime Created { get; set; }
 
         [Column(TypeName = "ntext")]
-        public string Content { get; set; }
+        [DisplayName("Nội dung")]
+        public string? Content { get; set; }
     }
 }
