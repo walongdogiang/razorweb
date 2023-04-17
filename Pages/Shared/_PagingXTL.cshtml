@@ -4,6 +4,14 @@
       - currentPage:int - Trang hiện tại
       - countPages:int - tổng số trang
       - generateUrl:delegate Func<int?, string> trả về URL tương ứng với trang p (1,2,3 ...)
+      - delta:int - số trang mở rộng về mỗi bên trang hiện tại
+      - remain:int - tổng số trang hai bên trang hiện tại
+      - preview:bool - kiểm tra isvalid cho nhấn nút <<
+      - next:bool - kiểm tra isvalid cho nhấn nút >>
+      - prePages:bool - kiểm tra cho hiện nút ...(Previous 5 pages)
+      - nextPages:bool - kiểm tra cho hiện nút ...(Next 5 pages)
+      - teleNumbers:int - số trang được dịch chuyển (liên qua pre-nextPages)
+      - pagesRanges:list - danh sách các số paging sẽ đc hiển thị
 *@
 
 @model PagingModel
@@ -12,38 +20,48 @@
     int countPages = Model.countPages;
     var generateUrl = Model.generateUrl;
 
-    if (currentPage > countPages)
-        currentPage = countPages;
-
-    if (countPages <= 1) return;
-
-
     int? preview = null;
     int? next = null;
 
-    if (currentPage > 1)
-        preview = currentPage - 1;
+    bool prePages = false;
+    bool nextPages = false;
+    int teleNumbers = 5;
 
-    if (currentPage < countPages)
-        next = currentPage + 1;
+    int delta = 2;
+    int remain = delta * 2;
 
     // Các trang hiện thị trong điều hướng
     List<int> pagesRanges = new List<int>();
 
+    // Kiểm tra page hiện tại > tổng page
+    if (currentPage > countPages)
+        currentPage = countPages;
 
-    int delta = 5;             // Số trang mở rộng về mỗi bên trang hiện tại
-    int remain = delta * 2;     // Tổng số trang hai bên trang hiện tại
+    // kiểm tra nếu tổng page < 1 sẽ ko phân trang
+    if (countPages <= 1) return;
 
+    // Set số index nút <<
+    if (currentPage > 1)
+        preview = currentPage - 1;
+
+    // Set số index nút >>
+    if (currentPage < countPages)
+        next = currentPage + 1;
+
+    // Add id trang hiện tại
     pagesRanges.Add(currentPage);
+
     // Các trang phát triển về hai bên trang hiện tại
     for (int i = 1; i <= delta; i++)
     {
+        // Check theo chiều phải(tăng)
         if (currentPage + i <= countPages)
         {
             pagesRanges.Add(currentPage + i);
             remain--;
         }
 
+        // Check theo chiều trái(giảm)
         if (currentPage - i >= 1)
         {
             pagesRanges.Insert(0, currentPage - i);
@@ -51,10 +69,11 @@
         }
 
     }
+
     // Xử lý thêm vào các trang cho đủ remain
     if (remain > 0)
     {
-        //(xảy ra ở đầu mút của khoảng trang không đủ trang chèn  vào)
+        // xảy ra ở đầu mút đã giới hạn chạm về paging đầu => chèn bên phải
         if (pagesRanges[0] == 1)
         {
             for (int i = 1; i <= remain; i++)
@@ -66,9 +85,9 @@
                 pagesRanges.Add(pagesRanges.Last() + 1);
             }
         }
-        else //(xảy ra ở cuối mút của khoảng trang không đủ trang chèn  vào)
+        else // xảy ra ở cuối mút đã giới hạn chạm paging cuối => chèn bên trái
         {
-            for (int i = 1; i <= remain; i++)  
+            for (int i = 1; i <= remain; i++)
             {
                 if (pagesRanges.First() - 1 < 1)
                 {
@@ -79,36 +98,69 @@
         }
     }
 
-}
+    // Paging cố định sẽ có trang 1 và trang cuối
+    // Check nếu list paging chưa có trang 1 và check để hiển thị nút ...
+    if (pagesRanges.First() != 1)
+    {
+        prePages = pagesRanges.First() != 2;
+        pagesRanges.Insert(0, 1);
+    }
 
-@* PHÁT SINH HTML*@
+    // Check nếu list paging chưa có trang cuối và check để hiển thị nút ...
+    if (pagesRanges.Last() != countPages)
+    {
+        nextPages = pagesRanges.Last() != (countPages - 1);
+        pagesRanges.Add(countPages);
+    }
+
+}
 
 <ul class="pagination">
     <!-- Previous page link -->
     @if (preview != null)
     {
         <li class="page-item">
-            <a class="page-link" href="@generateUrl(preview)">Trang trước</a>
+            <a class="page-link" href="@generateUrl(preview)" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
         </li>
     }
     else
     {
         <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Trang trước</a>
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
         </li>
     }
 
     <!-- Numbered page links -->
     @foreach (var pageitem in pagesRanges)
     {
-        if (pageitem != currentPage) {
+        if (pageitem != currentPage)
+        {
             <li class="page-item">
                 <a class="page-link" href="@generateUrl(pageitem)">
                     @pageitem
                 </a>
             </li>
-        }   
-        else 
+
+            if (pageitem == 1 & prePages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@generateUrl(currentPage - teleNumbers)">...</a>
+                </li>
+            }
+            else if (pageitem == pagesRanges[^2] & nextPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@generateUrl(currentPage + teleNumbers)">...</a>
+                </li>
+            }
+        }
+        else
         {
             <li class="page-item active" aria-current="page">
                 <a class="page-link" href="#">@pageitem <span class="sr-only"></span></a>
@@ -116,18 +168,24 @@
         }
     }
 
-
     <!-- Next page link -->
     @if (next != null)
     {
         <li class="page-item">
-            <a class="page-link" href="@generateUrl(next)">Trang sau</a>
+            <a class="page-link" href="@generateUrl(next)" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
         </li>
     }
     else
     {
         <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Trang sau</a>
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                <span class="sr-only">Next</span>
+                <span aria-hidden="true">&raquo;</span>
+            </a>
         </li>
     }
 </ul>
+

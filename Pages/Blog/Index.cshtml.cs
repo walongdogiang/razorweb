@@ -20,12 +20,11 @@ namespace EFWeb.Pages_Blog
 
         public IList<Article> Articles { get; set; } = default!;
         public const int ITEMS_PER_PAGE = 10;
-        public int startNo { get; set; }
+        public int STT { get; set; }
 
         [BindProperty(SupportsGet = true, Name = "p")] // Tìm theo "p"
         public int currentPage { get; set; }
         public int countPage { get; set; } = 0;
-
 
         public async Task OnGetAsync(string searchBlog)
         {
@@ -47,12 +46,11 @@ namespace EFWeb.Pages_Blog
 
                 // check if currentPage is out of range(1,currentPage)
                 currentPage = currentPage < 1 ? 1 : currentPage > countPage ? countPage : currentPage;
-                startNo = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+                STT = (currentPage - 1) * ITEMS_PER_PAGE + 1;
 
-                Articles = await Task.FromResult(Articles.Skip(startNo - 1)
+                Articles = await Task.FromResult(Articles.Skip(STT - 1)
                     .Take(ITEMS_PER_PAGE).ToList());
             }
-
         }
     }
 }
