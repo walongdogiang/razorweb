@@ -6,12 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using EFWeb.Model;
+using EFWeb.Helpers;
 
 namespace EFWeb.Pages_Blog
 {
     public class DetailsModel : PageModel
     {
         private readonly EFWeb.Model.MyBlogContext _context;
+
+        [BindProperty(SupportsGet = true)]
+        public QueryHttps queryHttps { get; set; }
 
         public DetailsModel(EFWeb.Model.MyBlogContext context)
         {

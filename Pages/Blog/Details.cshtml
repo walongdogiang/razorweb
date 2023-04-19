@@ -1,4 +1,4 @@
-﻿@page "/blog/detailBlog/{id:int?}"
+﻿@page 
 @model EFWeb.Pages_Blog.DetailsModel
 
 @{
@@ -11,6 +11,8 @@
 @Html.Raw(Model.Article.Content)
 <hr />
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Article?.Id">Sửa</a> |
-    <a asp-page="./Index">Quay lại</a>
+    <a asp-page="./Edit" class="btn btn-primary" asp-route-search="@Model.queryHttps.SearchBlog"
+        asp-route-p="@Model.queryHttps.CurrentPage" asp-route-id="@Model.Article.Id">Edit</a>
+    <a asp-page="./Index" class="btn btn-secondary" asp-route-p="@Model.queryHttps.CurrentPage"
+       asp-route-search="@Model.queryHttps.SearchBlog">Go Back</a>
 </div>

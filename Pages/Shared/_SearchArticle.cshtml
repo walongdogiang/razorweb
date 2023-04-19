@@ -1,0 +1,18 @@
+﻿@model EFWeb.Helpers.QueryHttps
+
+<div class="col">
+    <div class="float-start col-7">
+        <a asp-page="Create" class="btn btn-primary" asp-route-search="@Model.SearchBlog"
+           asp-route-p="@Model.CurrentPage">Create new</a>
+    </div>
+    <div class="float-end col-5">
+        <form method="get" asp-page="./Index">
+            <input name="search" value="" class="p-1 col-9" />
+            <button class="btn btn-dark col-2" type="submit">Search</button>
+        </form>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+
+

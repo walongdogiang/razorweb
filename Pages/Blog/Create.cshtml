@@ -2,13 +2,15 @@
 @model EFWeb.Pages_Blog.CreateModel
 
 @{
-    ViewData["Title"] = "Tạo bài viết";
+    ViewData["Title"] = "Create Article";
+    Tuple<Article, QueryHttps> tupleBinding = new Tuple<Article, QueryHttps>(Model.Article, Model.queryHttps);
 }
 
-<h1>Tạo mới</h1>
+<h1>Create new</h1>
 
-<h4>Bài viết</h4>
+<h4>Article</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-5">
         <form method="post">
@@ -28,16 +30,16 @@
                 <textarea rows="3" asp-for="Article.Content" class="form-control"></textarea>
                 <span asp-validation-for="Article.Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Tạo" class="btn btn-primary" />
+            <div class="form-group mt-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-page="./Index" class="btn btn-secondary" asp-route-p="@Model.queryHttps.CurrentPage"
+                   asp-route-search="@Model.queryHttps.SearchBlog">Go Back</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index" asp-route-id="0">Danh sách bài viết</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

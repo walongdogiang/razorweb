@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EFWeb.Helpers;
+using EFWeb.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using EFWeb.Model;
+
 
 namespace EFWeb.Pages_Blog
 {
@@ -22,15 +24,16 @@ namespace EFWeb.Pages_Blog
         public const int ITEMS_PER_PAGE = 10;
         public int STT { get; set; }
 
-        [BindProperty(SupportsGet = true, Name = "p")] // Tìm theo "p"
-        public int currentPage { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public QueryHttps queryHttps { get; set; }
+
         public int countPage { get; set; } = 0;
 
-        public async Task OnGetAsync(string searchBlog)
+        public async Task OnGetAsync()
         {
-            if (searchBlog != null)
+            if (queryHttps.SearchBlog != null)
             {
-                Articles = await _context.articles.Where(x => x.Title.Contains(searchBlog))
+                Articles = await _context.articles.Where(x => x.Title.Contains(queryHttps.SearchBlog))
                     .ToListAsync();
 
             }
@@ -45,8 +48,10 @@ namespace EFWeb.Pages_Blog
                 countPage = (int)Math.Ceiling((double)Articles.Count() / ITEMS_PER_PAGE);
 
                 // check if currentPage is out of range(1,currentPage)
-                currentPage = currentPage < 1 ? 1 : currentPage > countPage ? countPage : currentPage;
-                STT = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+                queryHttps.CurrentPage = queryHttps.CurrentPage < 1 ? 1 
+                    : queryHttps.CurrentPage > countPage ? countPage : queryHttps.CurrentPage;
+
+                STT = (queryHttps.CurrentPage - 1) * ITEMS_PER_PAGE + 1;
 
                 Articles = await Task.FromResult(Articles.Skip(STT - 1)
                     .Take(ITEMS_PER_PAGE).ToList());

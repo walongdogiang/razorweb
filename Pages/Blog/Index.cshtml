@@ -6,56 +6,18 @@
     ViewData["Title"] = "Index";
     var pagingModel = new PagingModel()
     {
-        currentPage = Model.currentPage,
+        currentPage = Model.queryHttps.CurrentPage,
         countPages = Model.countPage,
-        generateUrl = (int? id) => Url.Page("/Blog/Index", new {p=id})
+        generateUrl = (int? id) => Url.Page("/Blog/Index", 
+             new { p = id, search = Model.queryHttps.SearchBlog })
     };
 }
 
+<h1 class="my-4">Article List</h1>
 
-<h1>Danh sách bài viết</h1>
-<form method="get" asp-page="./Index">
-    <label>Tìm kiếm</label>
-    <input name="searchBlog" value="" />
-    <button class="btn btn-dark" type="submit">Tìm</button>
-</form>
-<p>
-    <a asp-page="Create" class="btn btn-primary">Tạo bài viết</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>STT</th>
-            <th>
-                @Html.DisplayNameFor(model => model.Articles[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Articles[0].Created)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Articles)
-        {
-            <tr>
-                <td>
-                    @(Model.STT++)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Chỉnh sửa</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Chi tiết</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Xóa</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<partial name="_SearchArticle" model="Model.queryHttps" />
+
+<partial name="_TableArticle" model="Model" />
 
 <partial name="_PagingXTL" model="pagingModel" />
+

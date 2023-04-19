@@ -23,11 +23,12 @@
     int? preview = null;
     int? next = null;
 
+
     bool prePages = false;
     bool nextPages = false;
     int teleNumbers = 5;
 
-    int delta = 2;
+    int delta = 3;
     int remain = delta * 2;
 
     // Các trang hiện thị trong điều hướng
@@ -112,10 +113,9 @@
         nextPages = pagesRanges.Last() != (countPages - 1);
         pagesRanges.Add(countPages);
     }
-
 }
 
-<ul class="pagination">
+<ul class="pagination float-end me-5">
     <!-- Previous page link -->
     @if (preview != null)
     {
@@ -173,8 +173,8 @@
     {
         <li class="page-item">
             <a class="page-link" href="@generateUrl(next)" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
                 <span class="sr-only">Next</span>
+                <span aria-hidden="true">&raquo;</span>
             </a>
         </li>
     }
@@ -189,3 +189,4 @@
     }
 </ul>
 
+<div class="clearfix"></div>

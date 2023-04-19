@@ -13,16 +13,16 @@ namespace EFWeb.Model
         [StringLength(255, MinimumLength = 5, ErrorMessage = "Length must be greater than {2} characters.")]
         [Required(ErrorMessage = "{0} is null")]
         [Column(TypeName = "nvarchar")]
-        [DisplayName("Tiêu đề")]
+        [DisplayName("Title")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "{0} is null")]
         [DataType(DataType.Date)]
-        [DisplayName("Ngày tạo")]
+        [DisplayName("Created Date")]
         public DateTime Created { get; set; }
 
         [Column(TypeName = "ntext")]
-        [DisplayName("Nội dung")]
+        [DisplayName("Content")]
         public string? Content { get; set; }
     }
 }

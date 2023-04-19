@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using EFWeb.Model;
+using EFWeb.Helpers;
 
 namespace EFWeb.Pages_Blog
 {
@@ -19,7 +20,10 @@ namespace EFWeb.Pages_Blog
         }
 
         [BindProperty]
-      public Article Article { get; set; } = default!;
+        public Article Article { get; set; } = default!;
+
+        [BindProperty(SupportsGet = true)]
+        public QueryHttps queryHttps { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -56,7 +60,7 @@ namespace EFWeb.Pages_Blog
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { search = queryHttps.SearchBlog, p = queryHttps.CurrentPage });
         }
     }
 }

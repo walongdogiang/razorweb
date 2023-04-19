@@ -1,0 +1,40 @@
+﻿@model EFWeb.Pages_Blog.IndexModel
+
+<table class="table my-4">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Articles[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Articles[0].Created)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Articles)
+        {
+            <tr>
+                <td>
+                    @(Model.STT++)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td class="float-end">
+                    <a asp-page="./Edit" class="btn btn-success" asp-route-search="@Model.queryHttps.SearchBlog"
+                   asp-route-p="@Model.queryHttps.CurrentPage" asp-route-id="@item.Id">Edit</a>
+                    <a asp-page="./Details" class="btn btn-primary" asp-route-search="@Model.queryHttps.SearchBlog"
+                   asp-route-p="@Model.queryHttps.CurrentPage" asp-route-id="@item.Id">Details</a>
+                    <a asp-page="./Delete" class="btn btn-danger" asp-route-search="@Model.queryHttps.SearchBlog"
+                   asp-route-p="@Model.queryHttps.CurrentPage" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

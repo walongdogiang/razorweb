@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EFWeb.Model;
+using EFWeb.Helpers;
 
 namespace EFWeb.Pages_Blog
 {
     public class EditModel : PageModel
     {
-        private readonly EFWeb.Model.MyBlogContext _context;
+        private readonly MyBlogContext _context;
 
-        public EditModel(EFWeb.Model.MyBlogContext context)
+        public EditModel(MyBlogContext context)
         {
             _context = context;
         }
@@ -22,30 +23,27 @@ namespace EFWeb.Pages_Blog
         [BindProperty]
         public Article Article { get; set; } = default!;
 
+        [BindProperty(SupportsGet = true)]
+        public QueryHttps queryHttps { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.articles == null)
-            {
-                return Content("Not found this article!");
-            }
+            if (_context.articles == null)
+                return Content("Error to get data!");
 
-            var article =  await _context.articles.FirstOrDefaultAsync(m => m.Id == id);
+            var article = await _context.articles.FirstOrDefaultAsync(m => m.Id == id);
+
             if (article == null)
-            {
                 return Content("Not found this article!");
-            }
+
             Article = article;
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
             _context.Attach(Article).State = EntityState.Modified;
 
@@ -56,21 +54,15 @@ namespace EFWeb.Pages_Blog
             catch (DbUpdateConcurrencyException)
             {
                 if (!ArticleExists(Article.Id))
-                {
                     return Content("Not found this article!");
-                }
                 else
-                {
                     throw;
-                }
             }
-
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Details", 
+                new { search = queryHttps.SearchBlog, p = queryHttps.CurrentPage, id = Article.Id});
         }
 
         private bool ArticleExists(int id)
-        {
-          return (_context.articles?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+            => (_context.articles?.Any(e => e.Id == id)).GetValueOrDefault();
     }
 }
