@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFWeb.Helpers;
 using EFWeb.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFWeb.Pages_Blog
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly MyBlogContext _context;

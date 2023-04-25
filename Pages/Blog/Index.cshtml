@@ -1,7 +1,6 @@
 ﻿@page
 @using EFWeb.Helpers;
 @model EFWeb.Pages_Blog.IndexModel
-
 @{
     ViewData["Title"] = "Index";
     var pagingModel = new PagingModel()
@@ -11,9 +10,16 @@
         generateUrl = (int? id) => Url.Page("/Blog/Index", 
              new { p = id, search = Model.queryHttps.SearchBlog })
     };
+
+    var statusMessage = TempData["StatusMessage"];
+}
+@if (statusMessage != null)
+{
+    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="statusMessage" />
 }
 
 <h1 class="my-4">Article List</h1>
+
 
 <partial name="_SearchArticle" model="Model.queryHttps" />
 

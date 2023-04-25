@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
@@ -18,10 +18,12 @@ namespace EFWeb.Areas.Identity.Pages.Account
     public class ConfirmEmailModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public ConfirmEmailModel(UserManager<AppUser> userManager)
+        public ConfirmEmailModel(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         /// <summary>
@@ -40,13 +42,26 @@ namespace EFWeb.Areas.Identity.Pages.Account
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{userId}'.");
+                return NotFound($"Không tìm thấy User có Id = '{userId}'.");
             }
 
+            // Vì lúc gửi là mã hóa code = Base64 nên lúc nhận phải giải mã ra
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
-            return Page();
+
+            if (result.Succeeded)
+            {
+                StatusMessage = "Xác thực Email thành công!";
+                await _signInManager.SignInAsync(user, false);
+                TempData["StatusMessage"] = StatusMessage;
+                return RedirectToPage("/Blog/Index");
+            }
+            else
+            {
+                StatusMessage = "Xác thực Email thất bại!";
+                return Page();
+            }
+
         }
     }
 }
