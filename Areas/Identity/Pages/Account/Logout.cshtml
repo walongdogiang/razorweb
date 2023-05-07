@@ -1,8 +1,11 @@
 ﻿@page "/Logout"
 @model LogoutModel
 @{
-    ViewData["Title"] = "Log out";
+    ViewData["Title"] = "Đăng xuất";
 }
+
+// ko xài code html page này nữa vì khi bấm đăng xuất ở navbar trong _loginPartial sẽ out ra luôn
+// chứ ko hỏi lại nữa, khi đăng xuất sẽ chuyển hướng tới 1 page khác luôn
 
 <header>
     <h1>@ViewData["Title"]</h1>
@@ -10,12 +13,13 @@
         if (User.Identity?.IsAuthenticated ?? false)
         {
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+                <p>Bạn có chắc đăng xuất tài khoản chứ?</p>
+                <button type="submit" class="btn btn-secondary">Đăng xuất</button>
             </form>
         }
         else
         {
-            <p>You have successfully logged out of the application.</p>
+            <p>Bạn đã đăng xuất tài khoản thành công. Hẹn gặp lại bạn!</p>
         }
     }
 </header>

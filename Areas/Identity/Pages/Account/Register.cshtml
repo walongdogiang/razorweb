@@ -1,15 +1,14 @@
 ﻿@page "/Register"
 @model RegisterModel
 @{
-    ViewData["Title"] = "Sign up";
+    ViewData["Title"] = "Đăng ký";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>@ViewData["Title"] tài khoản</h1>
 
 <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group mb-3">
@@ -37,15 +36,13 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h4>Use another service (Facebook, Google, Twitter, ...) to log in.</h4>
+            <h4>Sử dụng dịch vụ ngoài (Facebook, Google, Twitter, ...) để đăng nhập.</h4>
             <hr />
             @{
                 if ((Model.ExternalLogins?.Count ?? 0) == 0)
                 {
                     <div>
-                        <p>
-                            Not Configuration.
-                        </p>
+                        <p>Chưa cấu hình.</p>
                     </div>
                 }
                 else

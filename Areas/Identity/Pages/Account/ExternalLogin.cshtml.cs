@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
@@ -86,7 +86,7 @@ namespace EFWeb.Areas.Identity.Pages.Account
             [EmailAddress]
             public string Email { get; set; }
         }
-        
+
         public IActionResult OnGet() => RedirectToPage("./Login");
 
         public IActionResult OnPost(string provider, string returnUrl = null)
@@ -94,6 +94,12 @@ namespace EFWeb.Areas.Identity.Pages.Account
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            // Tạo ra cửa sổ dịch vụ ngoài và cho phép ng dùng truy cập vào thông tin của dvu này
+            // Khi ng dùng cho phép hê thống truy cập vào tk dvu ngoài thì dvu ngoài gửi mã token 
+            // đến ứng dụng của cta thông qua đ/c CallBackPath: /dang-nhap-tu-google
+            // Từ d/c này nó sẽ lấy đc mã token và tự dộng truy cập thông tin kết nối với tk của user
+            // Sau khi lấy đc thông tin của User, d/c này sẽ chuyển hướng về trang redirectUrl
             return new ChallengeResult(provider, properties);
         }
 
@@ -102,38 +108,41 @@ namespace EFWeb.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
-                ErrorMessage = $"Error from external provider: {remoteError}";
+                ErrorMessage = $"Lỗi từ dịch vụ ngoài: {remoteError}";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information.";
+                ErrorMessage = "Không tìm thấy thông tin đăng nhập từ dịch vụ ngoài.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            // Nếu dvu ngoài này đã dc đc liên kết với tk local => cho login ngay
             if (result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                _logger.LogInformation("{Name} đã đăng nhập với dịch vụ {LoginProvider}.",
+                    info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
-            if (result.IsLockedOut)
+            if (result.IsLockedOut) // Nếu tk ngoài này đang bị khóa
             {
                 return RedirectToPage("./Lockout");
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
+                // TH1: Tìm thấy tk local có Email trùng với dvu ngoài, nhưng chưa liên kết dvu ngoài
+                //      => liên kết tk local vs dvu ngoài
+                // TH2: Ko tìm thấy tk local có email trùng dvu ngoài
+                //      => Tự động tạo tk local cho dvu ngoài và lket với dvu này
                 ReturnUrl = returnUrl;
                 ProviderDisplayName = info.ProviderDisplayName;
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    Input = new InputModel
-                    {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
+                    Input = new InputModel { Email = info.Principal.FindFirstValue(ClaimTypes.Email)};
                 }
                 return Page();
             }
@@ -146,12 +155,63 @@ namespace EFWeb.Areas.Identity.Pages.Account
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information during confirmation.";
+                ErrorMessage = "Lỗi lấy thông tin từ dịch vụ ngoài.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
             if (ModelState.IsValid)
             {
+                // Tìm tk local có Email == Email dvu ngoài này
+                var registerUser = await _userManager.FindByEmailAsync(Input.Email);
+
+                if (registerUser != null)
+                {
+                    // Liên kết tk local với Email dvu ngoài này và đăng nhập
+                    var resultLink = await _userManager.AddLoginAsync(registerUser, info);
+                    if (resultLink.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(registerUser, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+                else // Nếu ko tìm thấy tk local có Email == Email dvu ngoài này thì tạo tk cho email này
+                {
+                    var newUser = new AppUser()
+                    {
+                        UserName = Input.Email,
+                        Email = Input.Email,
+                    };
+
+                    // Tạo tk user cho Email dvu ngoài này
+                    var resultCreate = await _userManager.CreateAsync(newUser);
+
+                    // Nếu tạo thành công
+                    if(resultCreate.Succeeded)
+                    {
+                        // Thêm dvu ngoài này vào tk mới tạo
+                        var resultLink = await _userManager.AddLoginAsync(newUser, info);
+
+                        // Tạo 1 mã token xác thực Email và hệ thống tự động xác thực luôn
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                        await _userManager.ConfirmEmailAsync(newUser, code);
+
+                        if (resultLink.Succeeded)
+                        {
+                            // Chuyển tk này vào trạng thái đăng nhập
+                            await _signInManager.SignInAsync(newUser, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
+                    else // Nếu tạo tk thất bại
+                    {
+                        ModelState.AddModelError(String.Empty, "Tạo tài khoản thất bại! Vui lòng thử lại.");
+                        return Page();
+                    }
+                }
+
+                return Content("Dừng lại ở đây.");
+
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

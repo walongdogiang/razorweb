@@ -1,29 +1,28 @@
-﻿@page
+﻿@page "/su-dung-dich-vu-ngoai"
 @model ExternalLoginModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = " Dịch vụ ngoài";
 }
 
 <h1>@ViewData["Title"]</h1>
-<h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
+<h2 id="external-login-title">Liên kết với tài khoản @Model.ProviderDisplayName.</h2>
 <hr />
 
 <p id="external-login-description" class="text-info">
-    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
+    Bạn đã xác thực thành công từ <strong>@Model.ProviderDisplayName</strong>.
+    Bạn có muốn tạo hoặc liên kết Email này với tài khoản?
 </p>
 
 <div class="row">
     <div class="col-md-4">
         <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
-                <input asp-for="Input.Email" class="form-control" autocomplete="email" />
+            <div class="form-group mb-1">
                 <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" readonly="True"/>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <button type="submit" class="w-100 btn btn-primary">Đăng ký</button>
         </form>
     </div>
 </div>

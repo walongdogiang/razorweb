@@ -61,16 +61,16 @@ namespace EFWeb.Areas.Identity.Pages.Account
             [Required(ErrorMessage = "{0} không được để trống.")]
             [StringLength(100, ErrorMessage = "Độ dài phải nằm trong khoảng từ {2} đến {1} ký tự", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Mật khẩu")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
+            [Display(Name = "Mật khẩu lặp lại")]
             [Compare("Password", ErrorMessage = "Mật khẩu lặp lại không đúng!")]
             public string ConfirmPassword { get; set; }
 
             [Required(ErrorMessage = "{0} không được để trống.")]
-            [Display(Name = "UserName")]
+            [Display(Name = "Tên tài khoản")]
             [StringLength(100, ErrorMessage = "Độ dài phải nằm trong khoảng từ {2} đến {1} ký tự", MinimumLength = 6)]
             public string UserName { get; set; }
         }

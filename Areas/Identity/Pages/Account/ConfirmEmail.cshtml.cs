@@ -47,6 +47,8 @@ namespace EFWeb.Areas.Identity.Pages.Account
 
             // Vì lúc gửi là mã hóa code = Base64 nên lúc nhận phải giải mã ra
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+
+            // Xác thực Email với mã token
             var result = await _userManager.ConfirmEmailAsync(user, code);
 
             if (result.Succeeded)
