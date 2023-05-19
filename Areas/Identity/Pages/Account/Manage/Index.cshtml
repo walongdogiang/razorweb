@@ -1,7 +1,7 @@
-﻿@page
+﻿@page "/user/profile"
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Hồ sơ cá nhân";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
@@ -20,7 +20,17 @@
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <div class="form-group mb-2">
+                <label asp-for="Input.BirthDate"></label>
+                <input type="date" asp-for="Input.BirthDate" class="form-control" />
+                <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.HomeAddress"></label>
+                <textarea asp-for="Input.HomeAddress" class="form-control" ></textarea>
+                <span asp-validation-for="Input.HomeAddress" class="text-danger"></span>
+            </div>
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Lưu</button>
         </form>
     </div>
 </div>

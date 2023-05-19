@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/user/external-login"
 @model ExternalLoginsModel
 @{
     ViewData["Title"] = "Quản lý liên kết dịch vụ ngoài";
@@ -15,7 +15,7 @@
             @foreach (var login in Model.CurrentLogins)
             {
                 <tr>
-                    <td id="@($"login-provider-{login.LoginProvider}")">@login.ProviderDisplayName</td>
+                    <td class="w-25" id="@($"login-provider-{login.LoginProvider}")"><strong>@login.ProviderDisplayName</strong></td>
                     <td>
                         @if (Model.ShowRemoveButton)
                         {

@@ -57,7 +57,7 @@ namespace EFWeb.Areas.Identity.Pages.Account
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
-                    return RedirectToPage("./ForgotPasswordConfirmation");
+                    return RedirectToPage("./NotFoundAccount");
                 }
 
                 // Tạo mã token xác thực email
@@ -66,7 +66,7 @@ namespace EFWeb.Areas.Identity.Pages.Account
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
-                    values: new { area = "Identity", code },
+                    values: new { area = "Identity", code, email = Input.Email },
                     protocol: Request.Scheme);
 
                 // Gửi Message đến email để đặt lại mk
@@ -75,7 +75,7 @@ namespace EFWeb.Areas.Identity.Pages.Account
                     "Đặt lại mật khẩu",
                     $"Hãy <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>bấm vào đây</a> để đặt lại mật khẩu.");
                 TempData["CorrectEmail"] = true;
-                return RedirectToPage("./ForgotPasswordConfirmation", new {isCorrectEmail = true});
+                return RedirectToPage("./ForgotPasswordConfirmation");
             }
 
             return Page();

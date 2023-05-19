@@ -48,7 +48,7 @@ namespace EFWeb.Areas.Identity.Pages.Account
 
         }
 
-        public IActionResult OnGet(string code = null)
+        public IActionResult OnGet(string code = null, string email = null)
         {
             if (code == null)
             {
@@ -56,8 +56,10 @@ namespace EFWeb.Areas.Identity.Pages.Account
             }
             else
             {
+                var user = User;
                 Input = new InputModel
                 {
+                    Email = email,
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
                 };
                 return Page();
@@ -74,7 +76,7 @@ namespace EFWeb.Areas.Identity.Pages.Account
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)
             {
-                return RedirectToPage("./ResetPasswordConfirmation");
+                return RedirectToPage("./NotFoundAccount");
             }
 
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);

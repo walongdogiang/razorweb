@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using EFWeb.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,20 +17,24 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace EFWeb.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public class EmailModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly ILogger<LoginModel> _logger;
 
         public EmailModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ILogger<LoginModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _logger = logger;
         }
 
         /// <summary>
@@ -68,9 +73,9 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "{0} không được để trống.")]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Email mới")]
             public string NewEmail { get; set; }
         }
 
@@ -81,7 +86,7 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                NewEmail = email,
+                NewEmail = String.Empty,
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -92,7 +97,7 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải thông tin người dùng '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -104,7 +109,13 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải thông tin người dùng '{_userManager.GetUserId(User)}'.");
+            }
+
+            var checkNewEmail = await _userManager.FindByEmailAsync(Input.NewEmail);
+            if (checkNewEmail != null)
+            {
+                return Return_StatusMessage_Page("Email mới này đã tồn tại. Vui lòng thử lại!");
             }
 
             if (!ModelState.IsValid)
@@ -126,14 +137,17 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Xác nhận Email của bạn",
+                    $"Hãy <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>click vào đây</a> để xác nhận Email.");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
-                return RedirectToPage();
+                return Return_StatusMessage_Page("Hãy truy cập Email và nhấn xác nhận trong link được gửi tới.");
             }
+            return Return_StatusMessage_Page("Thay đổi Email thất bại.");
+        }
 
-            StatusMessage = "Your email is unchanged.";
+        public IActionResult Return_StatusMessage_Page(string statusMess)
+        {
+            StatusMessage = statusMess;
             return RedirectToPage();
         }
 
@@ -142,7 +156,7 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải thông tin người dùng '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
