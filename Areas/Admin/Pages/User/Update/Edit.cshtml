@@ -1,0 +1,57 @@
+﻿@page "/user/update"
+@model EFWeb.Areas.Admin.Pages.User.Update.EditModel
+@{
+    ViewData["Title"] = "Cập nhật thông tin người dùng";
+    ViewData["ActivePage"] = ManageNavPages.Update;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="profile-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-2">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control" disabled />
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.BirthDate"></label>
+                <input type="date" asp-for="Input.BirthDate" class="form-control" />
+                <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <div>
+                    <label name="Genders">Giới tính</label>
+                </div>
+                <div class="ms-3">
+                    @foreach (var gender in Model.Genders)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" asp-for="Input.Gender" value="@gender" />
+                            <label class="form-check-label text-capitalize" for="@gender">@Model.transNameGender(gender)</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.PhoneNumber"></label>
+                <input asp-for="Input.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.HomeAddress"></label>
+                <textarea asp-for="Input.HomeAddress" class="form-control"></textarea>
+                <span asp-validation-for="Input.HomeAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3 float-end">
+                <button id="update-profile-button" type="submit" class="btn btn-lg btn-primary">Đồng ý</button>
+                <a asp-page="./Index" class="btn btn-lg btn-secondary" asp-route-id="@Model.user.Id">Hủy bỏ</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

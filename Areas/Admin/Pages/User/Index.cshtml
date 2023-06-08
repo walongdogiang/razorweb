@@ -1,0 +1,21 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Danh sách người dùng";
+    var pagingModel = new PagingModel()
+        {
+            currentPage = Model.queryHttps.CurrentPage,
+            countPages = Model.countPage,
+            generateUrl = (int? id) => Url.Page("/User/Index",
+                    new { area = "Admin", p = id, search = Model.queryHttps.SearchBlog })
+        };
+}
+<h1 class="display-6">@ViewData["Title"]</h1>
+
+<partial name="_SearchArticle" model="Model.queryHttps" />
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<partial name="User/_TableUsers" model="Model" />
+
+<partial name="_PagingXTL" model="pagingModel" />

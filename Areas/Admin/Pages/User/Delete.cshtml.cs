@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace EFWeb.Pages.Blog.Components
+namespace EFWeb.Areas.Admin.Pages.User
 {
-    public class _SearchArticleModel : PageModel
+    public class DeleteModel : PageModel
     {
         public void OnGet()
         {

@@ -1,0 +1,16 @@
+﻿@page
+@model DeleteModel
+@{
+    ViewData["Title"] = "Xóa Role";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <p>Bạn có chắc muốn xóa Role: <span class="h4 text-danger"><em>@Html.DisplayFor(model => model.role.Name)</em></span></p>
+    <hr />
+    <p class="text-danger"><small>Lưu ý: Role đã xóa sẽ không thể phục hồi lại được!</small></p>
+    <form method="post">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-page="./Index" class="btn btn-secondary">Go Back</a>
+    </form>
+</div>

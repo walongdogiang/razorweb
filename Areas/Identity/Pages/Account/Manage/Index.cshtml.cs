@@ -23,6 +23,7 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
+
         public IndexModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager)
@@ -72,7 +73,15 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
             [BirthDateValidation(1940, 2010)]
             [Display(Name = "Ngày sinh")]
             public DateTime? BirthDate { get; set; }
+
+            [Display(Name = "Giới tính")]
+            public string Gender { get; set; }
         }
+
+        public string[] Genders { get; set; }
+
+        public string transNameGender(string gender) 
+            => gender == "male" ? "nam" : gender == "female" ? "nữ" : "không xác định";
 
         private async Task LoadAsync(AppUser user)
         {
@@ -81,11 +90,15 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
 
             Username = userName;
 
+            Genders = new[] { "male", "female", "unspecified" };
+
+
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
                 HomeAddress = user.HomeAddress,
-                BirthDate = user.BirthDate
+                BirthDate = user.BirthDate,
+                Gender = user.Gender,
             };
         }
 
@@ -118,6 +131,7 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
             user.PhoneNumber = Input.PhoneNumber;
             user.HomeAddress= Input.HomeAddress;
             user.BirthDate = Input.BirthDate;
+            user.Gender = Input.Gender;
 
             await _userManager.UpdateAsync(user);
 
@@ -125,5 +139,6 @@ namespace EFWeb.Areas.Identity.Pages.Account.Manage
             StatusMessage = "Hồ sơ của bạn đã được cập nhật.";
             return RedirectToPage();
         }
+
     }
 }

@@ -22,7 +22,7 @@ namespace EFWeb.Pages_Blog
             _context = context;
         }
 
-        public IList<Article> Articles { get; set; } = default!;
+        public IList<Article> Articles { get; set; }
         public const int ITEMS_PER_PAGE = 10;
         public int STT { get; set; }
 

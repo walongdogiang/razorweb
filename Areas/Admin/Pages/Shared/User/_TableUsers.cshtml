@@ -1,0 +1,45 @@
+﻿@model EFWeb.Areas.Admin.Pages.User.IndexModel
+
+<table class="table table-striped table-hover mb-3">
+    <thead class="table-dark text-light">
+        <tr>
+            <th>#</th>
+            <th>Tên người dùng</th>
+            <th>Vai trò</th>
+            <th>Tác vụ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.users)
+        {
+            <tr>
+                <th scope="col">@(Model.STT++)</th>
+                <td>@Html.DisplayFor(modelItem => user.UserName)</td>
+                <td>
+                    <div class="add-role d-flex">
+                        <a asp-page="Update/AddRole" 
+                            class="me-3" asp-route-id="@user.Id" title="Thêm Role">
+                            <i class="bi bi-plus-circle-fill h4"></i>
+                        </a>
+                        @user.RoleNames
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <a asp-page="Update/Index" class="btn btn-primary" asp-route-id="@user.Id">Chi tiết</a>
+                        <a asp-page="Update/Edit" class="btn btn-success" asp-route-id="@user.Id">Cập nhật</a>
+                        <a asp-page="Update/SetPassword" class="btn btn-danger" asp-route-id="@user.Id">Đổi mật khẩu</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.users.Count == 0 && !string.IsNullOrEmpty(Model.queryHttps.SearchBlog))
+{
+    <p class="text-center">Không tìm thấy tài khoản có tên người dùng trùng khớp với tìm kiếm trong danh sách. Vui lòng thử lại!</p>
+}
+else if(Model.users.Count == 0){
+    <p class="text-center">Không tìm thấy tài khoản người dùng nào trong danh sách.</p>
+}

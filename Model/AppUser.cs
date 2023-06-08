@@ -12,5 +12,9 @@ namespace EFWeb.Model
 
         [DataType(DataType.Date)]
         public DateTime? BirthDate { get; set; }
+
+        [Column(TypeName = "nvarchar")]
+        [StringLength(20)]
+        public string? Gender { get; set; }
     }
 }

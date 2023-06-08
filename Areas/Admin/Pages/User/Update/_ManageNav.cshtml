@@ -1,0 +1,19 @@
+﻿
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)"
+           id="profile" asp-page="./Index" asp-route-id="@Model.user.Id">Hồ sơ người dùng</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.UpdateNavClass(ViewContext)"
+           id="update" asp-page="./Edit" asp-route-id="@Model.user.Id">Thay đổi thông tin</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password"
+           asp-page="./SetPassword" asp-route-id="@Model.user.Id">Mật khẩu</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.AddRoleNavClass(ViewContext)" id="add-role"
+           asp-page="./AddRole" asp-route-id="@Model.user.Id">Thiết lập Role</a>
+    </li>
+</ul>

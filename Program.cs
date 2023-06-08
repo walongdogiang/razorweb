@@ -1,3 +1,4 @@
+using EFWeb.Areas.Admin.Pages.Role;
 using EFWeb.Model;
 using EFWeb.Services;
 using Microsoft.AspNetCore.Identity;
@@ -82,6 +83,8 @@ builder.Services.AddAuthentication()
         // Thiết lập đường dẫn Facebook chuyển hướng đến
         facebookOptions.CallbackPath = "/dang-nhap-tu-facebook";
     });
+
+builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 
 var app = builder.Build();
 

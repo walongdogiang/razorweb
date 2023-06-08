@@ -129,7 +129,6 @@ var document = window.document;
 		doc.head.appendChild( script ).parentNode.removeChild( script );
 	}
 
-
 function toType( obj ) {
 	if ( obj == null ) {
 		return obj + "";

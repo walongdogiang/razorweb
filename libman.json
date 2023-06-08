@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap-icons@1.10.5",
+      "destination": "wwwroot/lib/bootstrap-icons/",
+      "files": [
+        "font/fonts/bootstrap-icons.woff",
+        "font/fonts/bootstrap-icons.woff2",
+        "font/bootstrap-icons.css",
+        "font/bootstrap-icons.json",
+        "font/bootstrap-icons.min.css"
+      ]
+    },
+    {
+      "library": "multiple-select@1.2.3",
+      "destination": "wwwroot/lib/multiple-select/"
+    },
+    {
+      "library": "chosen@1.8.7",
+      "destination": "wwwroot/lib/chosen/",
+      "files": [
+        "chosen.jquery.min.js",
+        "chosen.min.css",
+        "chosen-sprite.png"
+      ]
+    },
+    {
+      "library": "selectize.js@0.15.2",
+      "destination": "wwwroot/lib/selectize.js/",
+      "files": [
+        "js/selectize.min.js",
+        "css/selectize.bootstrap5.min.css"
+      ]
+    },
+    {
+      "library": "multi-select@0.9.12",
+      "destination": "wwwroot/lib/multi-select/",
+      "files": [
+        "js/jquery.multi-select.min.js",
+        "css/multi-select.min.css",
+        "img/switch.png"
+      ]
+    }
+  ]
+}

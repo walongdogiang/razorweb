@@ -1,15 +1,19 @@
 ﻿@model EFWeb.Helpers.QueryHttps
 
-<div class="col">
+<div class="col mb-3">
     <div class="float-start col-7">
-        <a asp-page="Create" class="btn btn-primary" asp-route-search="@Model.SearchBlog"
-           asp-route-p="@Model.CurrentPage">Create new</a>
+        <a asp-page="./Create" class="btn btn-primary" asp-route-search="@Model.SearchBlog"
+           asp-route-p="@Model.CurrentPage">Tạo mới</a>
     </div>
     <div class="float-end col-5">
         <form method="get" asp-page="./Index">
-            <input name="search" value="" class="p-1 col-9" />
-            <button class="btn btn-dark col-2" type="submit">Search</button>
+            <div class="input-group mb-3">
+                <input class="clear-input form-control p-1 col-9 border border-secondary" input name="search" value="@Model.SearchBlog" placeholder="Tìm kiếm..."
+                       autofocus onfocus="var temp=this.value; this.value=''; this.value=temp" aria-describedby="btn-search">
+                <button class="btn btn-dark col-3" type="submit" id="btn-search">Tìm kiếm</button>
+            </div>
         </form>
+
     </div>
     <div class="clearfix"></div>
 </div>

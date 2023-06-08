@@ -1,0 +1,69 @@
+﻿@page "/user/profile"
+@model EFWeb.Areas.Admin.Pages.User.Update.IndexModel
+@{
+    ViewData["Title"] = "Thông tin người dùng";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="row bg-light pt-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row mb-2">
+                <div class="col-4">
+                    <label asp-for="@Model.user.UserName" class="fw-bold">Tên tài khoản</label>
+                </div>
+                <div class="col-7">
+                    @Model.user.UserName
+                </div>
+            </div>
+            <hr/>
+            <div class="row mb-2">
+                <div class="col-4">
+                    <label asp-for="user.BirthDate" class="fw-bold">Ngày sinh</label>
+                </div>
+                <div class="col-7">
+                    @Model.user.BirthDate?.ToString("dd/MM/yyyy")
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-2">
+                <div class="col-4">
+                    <label asp-for="user.Gender" class="fw-bold">Giới tính</label>
+                </div>
+                <div class="col-7 text-capitalize">
+                    @Model.transNameGender(Model.user.Gender)
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-2">
+                <div class="col-4">
+                    <label asp-for="user.PhoneNumber" class="fw-bold">Số điện thoại</label>
+                </div>
+                <div class="col-7 text-capitalize">
+                    @Model.user.PhoneNumber
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-4">
+                <div class="col-4">
+                    <label asp-for="user.HomeAddress" class="fw-bold">Địa chỉ</label>
+                </div>
+                <div class="col-7 text-capitalize">
+                    @Model.user.HomeAddress
+                </div>
+            </div>
+        </div>
+        <div>
+            <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.user.Id">Cập nhật</a>
+            <a asp-page="../Index" class="btn btn-secondary">Danh sách</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
