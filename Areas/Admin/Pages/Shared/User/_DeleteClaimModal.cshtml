@@ -1,0 +1,25 @@
+﻿@model IdentityUserClaim<string>?
+
+<a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteClaim_@Model.Id" title="Xóa"><i class="bi bi-x-lg h5"></i></a>
+<div class="modal fade" tabindex="-1" id="deleteClaim_@Model.Id" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h5 class="modal-title text-danger">Xác nhận xóa Claim</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-black">
+                <p class="m-0">
+                    Bạn có chắc muốn xóa claim <span class="h6 text-danger"><em>[@Model.ClaimType - @Model.ClaimValue]</em></span> ?<br />
+                    <small class="text-danger">Lưu ý: Claim đã xóa sẽ vĩnh viễn không thể phục hồi lại được !</small>
+                </p>
+            </div>
+            <div class="modal-footer pt-2">
+                <form method="post" asp-page="./UserClaimManage" asp-page-handler="DeleteClaim" value="Đồng ý" asp-route-claimid="@Model.Id">
+                    <button type="submit" class="btn btn-danger">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary m-0" data-bs-dismiss="modal">Hủy bỏ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

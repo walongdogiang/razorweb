@@ -62,11 +62,11 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
             };
         }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string userid)
         {
-            if (string.IsNullOrEmpty(id)) return NotFound("Không tìm thấy người dùng.");
+            if (string.IsNullOrEmpty(userid)) return NotFound("Không tìm thấy người dùng.");
 
-            user = await _userManager.FindByIdAsync(id);
+            user = await _userManager.FindByIdAsync(userid);
             if (user == null)
             {
                 return NotFound($"Không thể tải lên tài khoản với ID '{_userManager.GetUserId(User)}'.");
@@ -76,15 +76,15 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(string userid)
         {
-            if (string.IsNullOrEmpty(id)) return NotFound("Không tìm thấy người dùng.");
+            if (string.IsNullOrEmpty(userid)) return NotFound("Không tìm thấy người dùng.");
 
-            user = await _userManager.FindByIdAsync(id);
+            user = await _userManager.FindByIdAsync(userid);
 
             if (user == null)
             {
-                return NotFound($"Không thể tải lên tài khoản với ID '{id}'.");
+                return NotFound($"Không thể tải lên tài khoản với ID '{userid}'.");
             }
 
             if (!ModelState.IsValid)
@@ -101,7 +101,7 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
             await _userManager.UpdateAsync(user);
 
             StatusMessage = $"Hồ sơ của tài khoản {user.UserName} đã được cập nhật.";
-            return RedirectToPage("./Index", new {id = user.Id});
+            return RedirectToPage("./Index", new { userid = user.Id});
         }
     }
 }

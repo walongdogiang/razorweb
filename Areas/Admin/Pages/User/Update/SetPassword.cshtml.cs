@@ -9,8 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EFWeb.Areas.Admin.Pages.User.Update
 {
-    [Authorize(Roles = "Editor, Member")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AllowEditRole")]
     public class SetPasswordModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
@@ -35,38 +34,38 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
             public string? NewPassword { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Nhập lại mật khẩu mới")]
+            [Display(Name = "Nhập lại")]
             [Compare("NewPassword", ErrorMessage = "{0} không chính xác.")]
             public string? ConfirmPassword { get; set; }
         }
 
         public AppUser user { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string userid)
         {
-            if (string.IsNullOrEmpty(id)) return NotFound("Không tìm thấy tài khoản với id rỗng.");
+            if (string.IsNullOrEmpty(userid)) return NotFound("Không tìm thấy tài khoản với id rỗng.");
 
-            user = await _userManager.FindByIdAsync(id);
+            user = await _userManager.FindByIdAsync(userid);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{id}'.");
+                return NotFound($"Unable to load user with ID '{userid}'.");
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(string userid)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            if (string.IsNullOrEmpty(id)) return NotFound("Không thể tìm tải khoản với id bỏ trống.");
+            if (string.IsNullOrEmpty(userid)) return NotFound("Không thể tìm tải khoản với id bỏ trống.");
 
-            user = await _userManager.FindByIdAsync(id);
+            user = await _userManager.FindByIdAsync(userid);
             if (user == null)
             {
-                return NotFound($"Không tìm thấy tài khoản có ID '{id}'.");
+                return NotFound($"Không tìm thấy tài khoản có ID '{userid}'.");
             }
 
             await _userManager.RemovePasswordAsync(user);
@@ -83,7 +82,7 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
 
             StatusMessage = $"Mật khẩu của tài khoản {user.UserName} vừa được đổi thành công.";
 
-            return RedirectToPage("./Index", new { id = user.Id });
+            return RedirectToPage("./Index", new { userid = user.Id });
         }
     }
 }

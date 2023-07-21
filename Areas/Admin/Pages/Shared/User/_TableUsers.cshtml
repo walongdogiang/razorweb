@@ -17,8 +17,7 @@
                 <td>@Html.DisplayFor(modelItem => user.UserName)</td>
                 <td>
                     <div class="add-role d-flex">
-                        <a asp-page="Update/AddRole" 
-                            class="me-3" asp-route-id="@user.Id" title="Thêm Role">
+                        <a asp-page="Update/AddRole" class="me-3" asp-route-userid="@user.Id" title="Thêm Role">
                             <i class="bi bi-plus-circle-fill h4"></i>
                         </a>
                         @user.RoleNames
@@ -26,9 +25,9 @@
                 </td>
                 <td>
                     <div>
-                        <a asp-page="Update/Index" class="btn btn-primary" asp-route-id="@user.Id">Chi tiết</a>
-                        <a asp-page="Update/Edit" class="btn btn-success" asp-route-id="@user.Id">Cập nhật</a>
-                        <a asp-page="Update/SetPassword" class="btn btn-danger" asp-route-id="@user.Id">Đổi mật khẩu</a>
+                        <a asp-page="Update/Index" class="btn btn-primary" asp-route-userid="@user.Id">Chi tiết</a>
+                        <a asp-page="Update/Edit" class="btn btn-success" asp-route-userid="@user.Id">Cập nhật</a>
+                        <a asp-page="Update/SetPassword" class="btn btn-danger" asp-route-userid="@user.Id">Đổi mật khẩu</a>
                     </div>
                 </td>
             </tr>

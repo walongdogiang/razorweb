@@ -1,4 +1,5 @@
 ﻿@page
+@using static EFWeb.Areas.Admin.Pages.Role.IndexModel;
 @model EditModel
 @{
     ViewData["Title"] = "Cập nhật Role";
@@ -9,7 +10,7 @@
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 <hr />
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4 mt-2">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -17,11 +18,20 @@
                 <input asp-for="Input.Name" class="form-control" />
                 <span asp-validation-for="Input.Name" class="text-danger"></span>
             </div>
-            <div class="form-group mt-2">
-                <input type="submit" value="Đồng ý" class="btn btn-primary" />
-                <a asp-page="./Index" class="btn btn-secondary">Quay lại</a>
-            </div>
+            <partial name="_SubmitBackButton" model="@(new ButtonAttr{PageUrl = "./Index"})" />
         </form>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7">
+        <div class="d-flex">
+            <p class="me-3">Các đặc tính của role:</p>
+            <a asp-page="./AddRoleClaim"
+               class="me-3" asp-route-roleid="@Model.Role.Id" title="Thêm claim">
+                <i class="bi bi-plus-circle-fill h4"></i>
+            </a>
+        </div>
+
+        <partial name="Claims/_TableRoleClaims" model="Model.Claims" />
     </div>
 </div>
 
@@ -29,4 +39,9 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(function () {
+            $('#edit_Test4').modal('show');
+        });
+    </script>
 }

@@ -31,24 +31,24 @@ namespace EFWeb.Areas.Admin.Pages.Role
 
         public async Task<IActionResult> OnPostAsync(string roleid)
         {
-            if (roleid == null) return NotFound($"Role {roleid} không tồn tại");
-            role = await _roleManager.FindByIdAsync(roleid);
-            if (role == null) return NotFound($"Role {roleid} không tồn tại");
+            //if (roleid == null) return NotFound($"Role {roleid} không tồn tại");
+            //role = await _roleManager.FindByIdAsync(roleid);
+            //if (role == null) return NotFound($"Role {roleid} không tồn tại");
 
-            var result = await _roleManager.DeleteAsync(role);
+            //var result = await _roleManager.DeleteAsync(role);
 
-            if (result.Succeeded)
-            {
-                StatusMessage = $"Bạn vừa xóa role {role.Name} thành công.";
-                return RedirectToPage("./Index");
-            }
-            else
-            {
-                result.Errors.ToList().ForEach(error =>
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                });
-            }
+            //if (result.Succeeded)
+            //{
+            //    StatusMessage = $"Bạn vừa xóa role {role.Name} thành công.";
+            //    return RedirectToPage("./Index");
+            //}
+            //else
+            //{
+            //    result.Errors.ToList().ForEach(error =>
+            //    {
+            //        ModelState.AddModelError(string.Empty, error.Description);
+            //    });
+            //}
             return Page();
         }
     }

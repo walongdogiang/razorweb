@@ -1,0 +1,25 @@
+﻿@model IdentityRole
+
+<a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal_@Model.Name">Xóa</a>
+<div class="modal fade" tabindex="-1" id="deleteModal_@Model.Name" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h5 class="modal-title text-danger">Xác nhận xóa Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-black">
+                <p class="m-0">
+                    Bạn có chắc muốn xóa role <span class="h6 text-danger"><em>@Model.Name</em></span> ?<br />
+                    <small class="text-danger">Lưu ý: Role đã xóa sẽ không thể phục hồi lại được !</small>
+                </p>
+            </div>
+            <div class="modal-footer pt-2">
+                <form method="post" asp-page="./Delete" asp-route-roleid="@Model.Id">
+                    <button type="submit" class="btn btn-danger">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary m-0" data-bs-dismiss="modal">Hủy bỏ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

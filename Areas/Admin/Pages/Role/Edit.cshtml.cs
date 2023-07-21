@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using static EFWeb.Areas.Admin.Pages.Role.IndexModel;
 
 namespace EFWeb.Areas.Admin.Pages.Role
 {
@@ -24,21 +27,26 @@ namespace EFWeb.Areas.Admin.Pages.Role
         [BindProperty]
         public InputModel Input { get; set; }
 
+        public List<IdentityRoleClaim<string>> Claims { get; set; }
+
+
         [BindProperty]
-        public IdentityRole role { get; set; } = default!;
+        public IdentityRole Role { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(string roleid)
         {
             if (roleid == null) return NotFound($"Role {roleid} không tồn tại");
 
-            role = await _roleManager.FindByIdAsync(roleid);
+            Role = await _roleManager.FindByIdAsync(roleid);
 
-            if (role != null)
+            if (Role != null)
             {
-                Input = new InputModel()
+                Input = new InputModel
                 {
-                    Name = role.Name
+                    Name = Role.Name,
                 };
+                Claims = await _context.RoleClaims.Where(rc => rc.RoleId == Role.Id).ToListAsync();
+
                 return Page();
             }
             return NotFound($"Role {roleid} không tồn tại");
@@ -50,19 +58,19 @@ namespace EFWeb.Areas.Admin.Pages.Role
             {
                 return Page();
             }
-
             if (roleid == null) return NotFound($"Role {roleid} không tồn tại");
-            role = await _roleManager.FindByIdAsync(roleid);
-            if (role == null) return NotFound($"Role {roleid} không tồn tại");
+            Role = await _roleManager.FindByIdAsync(roleid);
+            if (Role == null) return NotFound($"Role {roleid} không tồn tại");
 
-            if(role.Name == Input.Name) return RedirectToPage("./Index");
+            if(Role.Name == Input.Name) return RedirectToPage("./Index");
 
-            role.Name = Input.Name;
-            var result = await _roleManager.UpdateAsync(role);
+            string oldName = Role.Name;
+            Role.Name = Input.Name;
+            var result = await _roleManager.UpdateAsync(Role);
 
             if (result.Succeeded)
             {
-                StatusMessage = $"Bạn đã đổi tên role {Input.Name} thành công.";
+                StatusMessage = $"Bạn đã đổi tên role {oldName} thành {Input.Name} thành công.";
                 return RedirectToPage("./Index");
             }
             else
@@ -72,7 +80,29 @@ namespace EFWeb.Areas.Admin.Pages.Role
                     ModelState.AddModelError(string.Empty, error.Description);
                 });
             }
-            return Page();
+            return RedirectToPage("./Index");
+        }
+
+        public async Task<IActionResult> OnPostDeleteClaimAsync(int? claimid)
+        {
+            if (claimid == null) return NotFound("Không thể tìm Claim với id rỗng !");
+            var claim = _context.RoleClaims.Where(c => c.Id == claimid).FirstOrDefault();
+            if (claim == null) return NotFound("Không tìm thấy Claim này");
+
+            Role = await _roleManager.FindByIdAsync(claim.RoleId);
+            if (Role == null) return NotFound($"Role {claim.RoleId} không tồn tại");
+
+            var result = await _roleManager.RemoveClaimAsync(Role, new Claim(claim.ClaimType, claim.ClaimValue));
+            if (!result.Succeeded)
+            {
+                result.Errors.ToList().ForEach(error =>
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                });
+                return Page();
+            }
+            StatusMessage = $"Bạn đã xóa thành công Claim: {claim.ClaimType} - {claim.ClaimValue} khỏi Role này.";
+            return RedirectToPage("./Edit", new {roleid = Role.Id});
         }
     }
 }

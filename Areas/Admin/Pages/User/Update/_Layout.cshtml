@@ -9,7 +9,13 @@
     }
 }
 
-<h2>Quản lý tài khoản: <span class="text-danger">@Model.user.UserName</span></h2>
+
+<div class="d-flex align-items-center">
+    <partial name="_BackButton" model="@(new ButtonAttr{PageUrl = "../Index", Title = "Quay lại danh sách người dùng"})" />
+    <div class="ms-5">
+        <h2>Quản lý tài khoản: <span class="text-danger">@Model.user.UserName</span></h2>
+    </div>
+</div>
 
 <div>
     <hr />

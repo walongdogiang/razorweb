@@ -1,0 +1,57 @@
+﻿@page
+@model EFWeb.Areas.Admin.Pages.Role.EditRoleClaimModel
+@{
+    ViewData["Title"] = "Cập nhật claim của Role";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<hr />
+<div class="row">
+    <div class="col-md-7">
+        <div class="col-md-3 text-center float-start">
+            <h4 class="rounded-pill bg-success text-white py-2">@Model.role.Name</h4>
+        </div>
+        <form method="post" class="float-end col-md-9">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-2 row ps-4">
+                <div class="col-md-3 ps-2 pe-0">
+                    <label asp-for="Input.ClaimType" class="control-label "></label>
+                </div>
+                <div class="col-md-9 px-0">
+                    <input asp-for="Input.ClaimType" class="form-control" autofocus onfocus="var temp=this.value; this.value=''; this.value=temp" />
+                    <span asp-validation-for="Input.ClaimType" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group mb-2 row ps-4">
+                <div class="col-md-3 ps-2 pe-0">
+                    <label asp-for="Input.ClaimValue" class="control-label"></label>
+                </div>
+                <div class="col-md-9 px-0">
+                    <input asp-for="Input.ClaimValue" class="form-control" />
+                    <span asp-validation-for="Input.ClaimValue" class="text-danger"></span>
+
+                    <div class="mt-4 float-end">
+                        <input type="submit" value="Đồng ý" class="btn btn-primary" />
+                        <a asp-page="./Edit" class="btn btn-secondary" asp-route-roleid="@Model.role.Id">Quay lại</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $('form').submit(function () {
+            $("input.form-control").each(function () {
+                $(this).val(this.value.trim().toLowerCase());
+            })
+        });
+    </script>
+}

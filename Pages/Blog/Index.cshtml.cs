@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFWeb.Pages_Blog
 {
-    [Authorize]
+    [Authorize(Policy = "AllowEditRole")]
     public class IndexModel : PageModel
     {
         private readonly MyBlogContext _context;

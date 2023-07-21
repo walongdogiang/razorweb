@@ -1,0 +1,40 @@
+﻿@model List<IdentityUserClaim<string>>
+@{
+    int Stt = 0;
+    //bool isUserPage = Url.Page("/Role/Edit", new { area = "Admin" }) == ViewContext.HttpContext.Request.Path.Value;
+}
+
+<table class="table table-hover mb-3">
+    <thead class="table-dark">
+        <tr>
+            <th width="5%">#</th>
+            <th width="40%">Claim Type</th>
+            <th width="30%">Giá trị</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr class="align-middle">
+                <th scope="col">@(++Stt)</th>
+                <td>@Html.DisplayFor(modelItem => claim.ClaimType)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => claim.ClaimValue)
+                </td>
+                <td>
+                    <div>
+                        <a asp-page="./UserClaimManage" asp-page-handler="EditClaim" asp-route-claimid="@claim.Id" class="btn btn-success" title="Chỉnh sửa">
+                            <i class="bi bi-pencil-square h5"></i>
+                        </a>
+                        <partial name="User/_DeleteClaimModal" model="claim" />
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Count() == 0)
+{
+    <p class="text-center">Tài khoản tạm thời chưa sở hữu claims nào !</p>
+}

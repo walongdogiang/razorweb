@@ -4,7 +4,17 @@
     transition: transform .1s;
 }
 
-.add-role a:hover {
-    transform: scale(1.2);
-    color: #FE0B4C;
+    .add-role a:hover {
+        transform: scale(1.2);
+        color: #FE0B4C;
+    }
+
+.btn-back a {
+    transition: 1s;
 }
+
+    .btn-back a:hover {
+        color: #dc3545;
+        transform: translateX(-2rem);
+    }
+

@@ -33,6 +33,7 @@ namespace EFWeb.Areas.Admin.Pages.Role
             {
                 return Page();
             }
+
             var newRole = new IdentityRole(Input.Name);
             var result = await _roleManager.CreateAsync(newRole);
 

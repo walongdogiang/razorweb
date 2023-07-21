@@ -1,4 +1,4 @@
-﻿@page "/Admin/add-role"
+﻿@page "/user/add-role"
 @model AddRoleModel
 @{
     ViewData["Title"] = "Thiết lập Role cho người dùng";
@@ -11,30 +11,43 @@
         <form id="set-password-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group mb-3">
-                <label asp-for="userRoles"></label>
+                <label asp-for="userRolesName"></label>
                 <div class="row mt-2">
                     <div class="col-md-8 pe-0">
-                        @Html.ListBoxFor(m => m.userRoles, Model.allRoles, new{
+                        @Html.ListBoxFor(m => m.userRolesName, Model.allRoles, new{
                         id = "id-select-roles", @class = "form-control border border-info rounded-1", multiple="multiple"
                         })
+
+                        <partial name="_SubmitBackButton" model="@(new ButtonAttr{PageUrl = "../Index"})" />
                     </div>
-                    <div class="col-md-4 ps-1">
+                    <div class="col-md-4 ps-0">
                         <a href="javascript:document.getElementById('id-select-roles').selectize.selectall();"
-                           class="btn btn-primary">
-                            Chọn tất cả
+                           class="btn btn-secondary py-2">
+                            Toàn bộ
                         </a>
                     </div>
-
                 </div>
-
-                <span asp-validation-for="userRoles" class="text-danger"></span>
+                <span asp-validation-for="userRolesName" class="text-danger"></span>
             </div>
             <div class="clearfix"></div>
-            <div class="form-group mb-3">
-                <button type="submit" class="btn btn-lg btn-primary">Đồng ý</button>
-                <a asp-page="../Index" class="btn btn-lg btn-secondary">Hủy bỏ</a>
-            </div>
         </form>
+    </div>
+</div>
+<hr />
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-5">
+        <p>Các Roleclaims tài khoản được phân quyền:</p>
+        <partial name="Claims/_TableRoleClaims" model="Model.roleClaims" />
+    </div>
+    <div class="col-7">
+        <div class="d-flex">
+            <p class="me-3">Các claims tài khoản đang sở hữu: </p>
+            <a asp-page="./UserClaimManage" asp-page-handler="AddClaim" asp-route-userid="@Model.user.Id" title="Thêm claim cho người dùng">
+                <i class="bi bi-plus-circle-fill h4"></i>
+            </a>
+        </div>
+        <partial name="Claims/_TableUserClaims" model="Model.userClaims" />
     </div>
 </div>
 
@@ -58,6 +71,6 @@
         };
     </script>
 
-    <partial name="_ValidationScriptsPartial" />
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 

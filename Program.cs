@@ -86,6 +86,15 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AllowEditRole", policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.RequireClaim("full-service", "full");
+    });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -106,3 +115,4 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
+

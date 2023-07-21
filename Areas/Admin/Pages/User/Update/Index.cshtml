@@ -56,10 +56,9 @@
                     @Model.user.HomeAddress
                 </div>
             </div>
-        </div>
-        <div>
-            <a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.user.Id">Cập nhật</a>
-            <a asp-page="../Index" class="btn btn-secondary">Danh sách</a>
+            <div class="text-center mt-2">
+                <a asp-page="./Edit" class="btn fs-5 btn-primary" asp-route-userid="@Model.user.Id">Cập nhật</a>
+            </div>
         </div>
     </div>
 </div>

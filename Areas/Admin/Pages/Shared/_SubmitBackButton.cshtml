@@ -1,0 +1,16 @@
+﻿@model ButtonAttr
+
+<div class="@Model.ParrentClass">
+    <button type="submit" class="btn btn-primary fs-5" >Đồng ý</button>
+    @if (string.IsNullOrEmpty(Model.PageUrl))
+    {
+        <a href="javascript:void(0);" onclick="history.go(-1);" class="btn btn-secondary fs-5">Quay lại</a>
+    }
+    else
+    {
+        <a asp-page="@Model.PageUrl" class="btn btn-secondary fs-5" asp-route-roleid="@Model.RoleId" 
+            asp-route-userid="@Model.UserId">@Model.Backext</a>
+    }
+</div>
+
+

@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using EFWeb.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,11 +15,13 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly MyBlogContext _context;
 
-        public AddRoleModel(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AddRoleModel(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, MyBlogContext context)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
         [TempData]
@@ -27,45 +31,64 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
 
         [BindProperty]
         [DisplayName("Các roles của người dùng")]
-        public string[]? userRoles { get; set; }
+        public string[] userRolesName { get; set; }
 
         public SelectList allRoles { get; set; }
+        public List<IdentityRoleClaim<string>> roleClaims { get; set; }
+        public List<IdentityUserClaim<string>> userClaims { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string userid)
         {
-            if (string.IsNullOrEmpty(id)) return NotFound("Không tìm thấy tài khoản với id rỗng.");
+            if (string.IsNullOrEmpty(userid)) return NotFound("Không tìm thấy tài khoản với id rỗng.");
 
-            user = await _userManager.FindByIdAsync(id);
+            user = await _userManager.FindByIdAsync(userid);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{id}'.");
+                return NotFound($"Unable to load user with ID '{userid}'.");
             }
 
-            userRoles = (await _userManager.GetRolesAsync(user)).ToArray();
+            userRolesName = (await _userManager.GetRolesAsync(user)).ToArray();
 
             List<string> rolesName = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
             allRoles = new SelectList(rolesName);
+
+            await GetUserClaims(userid);
+
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task GetUserClaims(string userid)
+        {
+            // lấy ra các đối tượng Roles của user này
+            // != biến userRoles ở trên chỉ lấy mỗi Name của Role, còn biến này lấy 1 đối tượng Roles hoàn chỉnh - tất cả info của Roles
+            var objUserRoles = _context.Roles.Join(_context.UserRoles.Where(ur => ur.UserId == userid), r => r.Id, ur => ur.RoleId, (r, ur) => r);
+
+            // Lấy ra các claims mà user này có (user có các claims của các roles đã đc gán)
+            roleClaims = await _context.RoleClaims.Join(objUserRoles, rc => rc.RoleId, ur => ur.Id, (rc, ur) => rc).ToListAsync();
+            
+            userClaims = await _context.UserClaims.Where(c => c.UserId == userid).ToListAsync();
+
+        }
+
+        public async Task<IActionResult> OnPostAsync(string userid)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            if (string.IsNullOrEmpty(id)) return NotFound("Không thể tìm tải khoản với id bỏ trống.");
+            if (string.IsNullOrEmpty(userid)) return NotFound("Không thể tìm tải khoản với id bỏ trống.");
 
-            user = await _userManager.FindByIdAsync(id);
+            user = await _userManager.FindByIdAsync(userid);
             if (user == null)
             {
-                return NotFound($"Không tìm thấy tài khoản có ID '{id}'.");
+                return NotFound($"Không tìm thấy tài khoản có ID '{userid}'.");
             }
 
             var oldRoles = (await _userManager.GetRolesAsync(user)).ToArray();
-            var deleteRoles = oldRoles.Where(r => !userRoles.Contains(r));
-            var addRoles = userRoles.Where(r => !oldRoles.Contains(r));
+
+            var deleteRoles = oldRoles.Where(r => !userRolesName.Contains(r));
+            var addRoles = userRolesName.Where(r => !oldRoles.Contains(r));
 
             List<string> rolesName = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
             allRoles = new SelectList(rolesName);
@@ -85,7 +108,7 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
             }
 
             StatusMessage = $"Tài khoản {user.UserName} vừa được cập nhật Role thành công.";
-            return RedirectToPage("../Index", new { id=user.Id});
+            return RedirectToPage("../Index", new { userid = user.Id});
         }
     }
 }

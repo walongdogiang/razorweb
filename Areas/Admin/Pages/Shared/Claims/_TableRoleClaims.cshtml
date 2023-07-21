@@ -1,0 +1,48 @@
+﻿@model List<IdentityRoleClaim<string>>
+@{
+    int Stt = 0;
+    bool isRolePage = Url.Page("/Role/Edit", new { area = "Admin" }) == ViewContext.HttpContext.Request.Path.Value;
+}
+
+<table class="table table-hover mb-3">
+    <thead class="table-dark">
+        <tr>
+            <th width="5%">#</th>
+            <th width="40%">Claim Type</th>
+            <th width="30%">Giá trị</th>
+            @if (isRolePage)
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr class="align-middle">
+                <th scope="col">@(++Stt)</th>
+                <td>@Html.DisplayFor(modelItem => claim.ClaimType)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => claim.ClaimValue)
+                </td>
+                @if (isRolePage)
+                {
+                    <td>
+                        <div>
+                            <a asp-page="./EditRoleClaim" asp-route-claimid="@claim.Id" class="btn btn-success" title="Chỉnh sửa"><i class="bi bi-pencil-square h5"></i></a>
+                            <partial name="Role/_DeleteClaimModal" model="claim" />
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Count() == 0 && isRolePage)
+{
+    <p class="text-center">Role tạm thời chưa sở hữu claims nào !</p>
+}
+else if (Model.Count() == 0)
+{
+    <p class="text-center">Tài khoản này chưa được phân quyền !</p>
+}

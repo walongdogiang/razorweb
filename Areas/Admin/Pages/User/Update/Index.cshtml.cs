@@ -24,14 +24,14 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
 
         public AppUser user { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string userid)
         {
-            if (string.IsNullOrEmpty(id)) return NotFound("Không tìm thấy người dùng.");
+            if (string.IsNullOrEmpty(userid)) return NotFound("Không tìm thấy người dùng.");
 
-            user = await _userManager.FindByIdAsync(id);
+            user = await _userManager.FindByIdAsync(userid);
             if (user == null)
             {
-                return NotFound($"Không thể tải lên tài khoản với ID '{id}'.");
+                return NotFound($"Không thể tải lên tài khoản với ID '{userid}'.");
             }
 
             return Page();

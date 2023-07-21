@@ -2,21 +2,24 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Danh sách các Role";
-    int STT = 1;
+    int STT = 0;
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<partial name="_StatusMessage" model="Model.StatusMessage"/>
-
-<div class ="mt-3">
+<div class="mt-3">
     <a asp-page="./Create" class="btn btn-primary">Tạo thêm</a>
 </div>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+
 <table class="table table-dark table-striped table-hover my-3 w-75">
     <thead class="table-dark">
         <tr>
             <th>#</th>
             <th>Tên Role</th>
+            <th>Role claims</th>
             <th>Tác vụ</th>
         </tr>
     </thead>
@@ -25,16 +28,28 @@
         {
             <tr>
                 <th scope="col">
-                    @(STT++)
+                    @(++STT)
                 </th>
                 <td>
                     @Html.DisplayFor(modelItem => role.Name)
                 </td>
                 <td>
+                    @foreach (var claim in role.Claims)
+                    {
+                        <small class="border border-3 rounded-pill border-@(STT % 2 == 0 ? "info":"info") px-3 py-1">@claim</small>
+                    }
+                </td>
+                <td>
                     <a asp-page="./Edit" class="btn btn-success" asp-route-roleid="@role.Id">Sửa</a>
-                    <a asp-page="./Delete" class="btn btn-danger" asp-route-roleid="@role.Id">Xóa</a>
+                    <partial name="Role/_DeleteModal" model="role" />
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
