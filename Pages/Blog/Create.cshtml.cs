@@ -13,9 +13,9 @@ namespace EFWeb.Pages_Blog
 {
     public class CreateModel : PageModel
     {
-        private readonly MyBlogContext _context;
+        private readonly AppDbContext _context;
 
-        public CreateModel(MyBlogContext context)
+        public CreateModel(AppDbContext context)
         {
             _context = context;
         }

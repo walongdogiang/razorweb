@@ -11,7 +11,7 @@ namespace EFWeb.Areas.Admin.Pages.Role
 {
     public class EditRoleClaimModel : RolePageModel
     {
-        public EditRoleClaimModel(RoleManager<IdentityRole> roleManager, MyBlogContext myBlogContext)
+        public EditRoleClaimModel(RoleManager<IdentityRole> roleManager, AppDbContext myBlogContext)
              : base(roleManager, myBlogContext) { }
 
         public class InputModel

@@ -15,9 +15,9 @@ namespace EFWeb.Pages_Blog
     [Authorize(Policy = "AllowEditRole")]
     public class IndexModel : PageModel
     {
-        private readonly MyBlogContext _context;
+        private readonly AppDbContext _context;
 
-        public IndexModel(MyBlogContext context)
+        public IndexModel(AppDbContext context)
         {
             _context = context;
         }

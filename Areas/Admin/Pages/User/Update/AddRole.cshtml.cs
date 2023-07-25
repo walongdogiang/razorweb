@@ -15,9 +15,9 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly MyBlogContext _context;
+        private readonly AppDbContext _context;
 
-        public AddRoleModel(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, MyBlogContext context)
+        public AddRoleModel(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext context)
         {
             _userManager = userManager;
             _roleManager = roleManager;

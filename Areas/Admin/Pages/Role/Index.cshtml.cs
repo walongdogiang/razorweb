@@ -9,7 +9,7 @@ namespace EFWeb.Areas.Admin.Pages.Role
 {
     public class IndexModel : RolePageModel
     {
-        public IndexModel(RoleManager<IdentityRole> roleManager, MyBlogContext myBlogContext) 
+        public IndexModel(RoleManager<IdentityRole> roleManager, AppDbContext myBlogContext) 
             : base(roleManager, myBlogContext){}
 
         public class RoleModel : IdentityRole

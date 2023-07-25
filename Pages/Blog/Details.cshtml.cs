@@ -14,12 +14,12 @@ namespace EFWeb.Pages_Blog
     [Authorize(Policy = "InGenZ")]
     public class DetailsModel : PageModel
     {
-        private readonly EFWeb.Model.MyBlogContext _context;
+        private readonly EFWeb.Model.AppDbContext _context;
 
         [BindProperty(SupportsGet = true)]
         public QueryHttps queryHttps { get; set; }
 
-        public DetailsModel(EFWeb.Model.MyBlogContext context)
+        public DetailsModel(EFWeb.Model.AppDbContext context)
         {
             _context = context;
         }

@@ -20,13 +20,13 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailS
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<MyBlogContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyBlogContext"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext"));
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<MyBlogContext>()
+    .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
 

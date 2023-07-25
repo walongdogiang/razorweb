@@ -12,9 +12,9 @@ namespace EFWeb.Pages_Blog
 {
     public class DeleteModel : PageModel
     {
-        private readonly EFWeb.Model.MyBlogContext _context;
+        private readonly EFWeb.Model.AppDbContext _context;
 
-        public DeleteModel(EFWeb.Model.MyBlogContext context)
+        public DeleteModel(EFWeb.Model.AppDbContext context)
         {
             _context = context;
         }

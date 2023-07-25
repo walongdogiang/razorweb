@@ -13,7 +13,7 @@ namespace EFWeb.Areas.Admin.Pages.Role
 {
     public class EditModel : RolePageModel
     {
-        public EditModel(RoleManager<IdentityRole> roleManager, MyBlogContext myBlogContext) 
+        public EditModel(RoleManager<IdentityRole> roleManager, AppDbContext myBlogContext) 
             : base(roleManager, myBlogContext){}
 
         public class InputModel

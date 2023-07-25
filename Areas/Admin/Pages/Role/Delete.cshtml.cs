@@ -9,7 +9,7 @@ namespace EFWeb.Areas.Admin.Pages.Role
 {
     public class DeleteModel : RolePageModel
     {
-        public DeleteModel(RoleManager<IdentityRole> roleManager, MyBlogContext myBlogContext)
+        public DeleteModel(RoleManager<IdentityRole> roleManager, AppDbContext myBlogContext)
             : base(roleManager, myBlogContext) 
         {}
 

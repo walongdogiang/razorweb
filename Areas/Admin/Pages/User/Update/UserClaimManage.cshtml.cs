@@ -10,10 +10,10 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
 {
     public class UserClaimManageModel : PageModel
     {
-        private readonly MyBlogContext _context;
+        private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _userManager;
 
-        public UserClaimManageModel(MyBlogContext myBlogContext, UserManager<AppUser> userManager)
+        public UserClaimManageModel(AppDbContext myBlogContext, UserManager<AppUser> userManager)
         {
             _context = myBlogContext;
             _userManager = userManager;
