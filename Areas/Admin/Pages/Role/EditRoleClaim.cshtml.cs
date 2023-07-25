@@ -62,15 +62,10 @@ namespace EFWeb.Areas.Admin.Pages.Role
             if (role == null) return NotFound("Không tìm thấy role");
 
             if (!ModelState.IsValid) return Page();
+
             if ((claim.ClaimType, claim.ClaimValue) == (Input.ClaimType, Input.ClaimValue)) return RedirectToPage("./Edit", new { roleid = role.Id });
 
-            //if ((await _roleManager.GetClaimsAsync(role)).Any(c => c.Type == Input.ClaimType && c.Value == Input.ClaimValue))
-            //{
-            //    ModelState.AddModelError(string.Empty, "Claim này đã tồn tại trong role, vui lòng nhập 1 Claim khác !");
-            //    return Page();
-            //}
-
-            if (_context.RoleClaims.Any(c => c.ClaimType == Input.ClaimType && c.ClaimValue == Input.ClaimValue && c.RoleId == role.Id))
+            if ((await _roleManager.GetClaimsAsync(role)).Any(c => c.Type == Input.ClaimType && c.Value == Input.ClaimValue))
             {
                 ModelState.AddModelError(string.Empty, "Claim này đã tồn tại trong role, vui lòng nhập 1 Claim khác !");
                 return Page();

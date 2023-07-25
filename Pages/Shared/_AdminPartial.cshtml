@@ -1,9 +1,10 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
-@inject RoleManager<IdentityRole> RoleManager
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authorizationService
 
-@if (SignInManager.IsSignedIn(User))
+@{
+    var resultAuthorize = await authorizationService.AuthorizeAsync(this.User, "ShowAdminMenu");
+}
+@if (resultAuthorize.Succeeded)
 {
     <div class="container-fluid navbar-expand-lg navbar-dark bg-dark rounded-3 px-1">
         <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">

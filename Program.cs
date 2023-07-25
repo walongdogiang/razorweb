@@ -1,6 +1,8 @@
 using EFWeb.Areas.Admin.Pages.Role;
 using EFWeb.Model;
+using EFWeb.Security.Requirements;
 using EFWeb.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -92,8 +94,26 @@ builder.Services.AddAuthorization(options => {
         policyBuilder.RequireAuthenticatedUser();
         policyBuilder.RequireClaim("full-service", "full");
     });
+
+    options.AddPolicy("InGenZ", policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.Requirements.Add(new GenZRequirements());
+    });
+
+    options.AddPolicy("ShowAdminMenu", policyBuilder =>
+    {
+        policyBuilder.RequireRole("Admin");
+    });
+
+    options.AddPolicy("CanUpdateArticle", policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.Requirements.Add(new ArticleUpdateRequirement());
+    });
 });
 
+builder.Services.AddTransient<IAuthorizationHandler, AppAuthorizationHandler>();
 
 var app = builder.Build();
 

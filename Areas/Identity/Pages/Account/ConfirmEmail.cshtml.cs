@@ -26,9 +26,6 @@ namespace EFWeb.Areas.Identity.Pages.Account
             _signInManager = signInManager;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
@@ -56,7 +53,7 @@ namespace EFWeb.Areas.Identity.Pages.Account
                 StatusMessage = "Xác thực Email thành công!";
                 await _signInManager.SignInAsync(user, false);
                 TempData["StatusMessage"] = StatusMessage;
-                return RedirectToPage("/Blog/Index");
+                return RedirectToPage("/Index");
             }
             else
             {

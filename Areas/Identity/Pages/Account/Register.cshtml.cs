@@ -129,7 +129,7 @@ namespace EFWeb.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false); // Cho ng dùng login vào trang web
-                        return LocalRedirect(returnUrl); //Quay lại trang localhost
+                        return LocalRedirect(returnUrl);
                     }
                 }
                 foreach (var error in result.Errors)
@@ -138,7 +138,6 @@ namespace EFWeb.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 

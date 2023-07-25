@@ -62,7 +62,7 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
             if (user == null) return NotFound("Không tìm thấy người dùng");
             if (!ModelState.IsValid) return Page();
 
-            if (_context.UserClaims.Any(c => c.UserId == userid && c.ClaimType == Input.ClaimType && c.ClaimValue == Input.ClaimValue))
+            if (await HasClaim(user, Input.ClaimType, Input.ClaimValue))
             {
                 ModelState.AddModelError(string.Empty, $"Claim [{Input.ClaimType} - {Input.ClaimValue}] này đã tồn tại trong tài khoản !");
                 return Page();
@@ -108,7 +108,11 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
             if ((userClaim.ClaimType, userClaim.ClaimValue) == (Input.ClaimType, Input.ClaimValue)) return RedirectToPage("./AddRole", new { userid = user.Id });
 
 
-            if (_context.UserClaims.Any(c => c.UserId == user.Id && c.ClaimType == Input.ClaimType && c.ClaimValue == Input.ClaimValue))
+            var b = _context.UserClaims.Any(c => c.UserId == user.Id && c.ClaimType == Input.ClaimType && c.ClaimValue == Input.ClaimValue);
+
+            var a = (await _userManager.GetClaimsAsync(user)).Any(c => c.Type == Input.ClaimType && c.Value == Input.ClaimValue);
+
+            if (await HasClaim(user, Input.ClaimType, Input.ClaimValue))
             {
                 ModelState.AddModelError(string.Empty, $"Claim [{Input.ClaimType} - {Input.ClaimValue}] này đã tồn tại trong tài khoản này !");
                 return Page();
@@ -144,5 +148,8 @@ namespace EFWeb.Areas.Admin.Pages.User.Update
             StatusMessage = $"Bạn đã xóa Claim: {userClaim.ClaimType} - {userClaim.ClaimValue} khỏi tài khoản này thành công !";
             return RedirectToPage("./AddRole", new { userid = user.Id });
         }
+
+        public async Task<bool> HasClaim(AppUser user, string type, string value)
+            => (await _userManager.GetClaimsAsync(user)).Any(c => (c.Type, c.Value) == (type, value));
     }
 }

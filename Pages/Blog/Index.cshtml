@@ -7,8 +7,7 @@
     {
         currentPage = Model.queryHttps.CurrentPage,
         countPages = Model.countPage,
-        generateUrl = (int? id) => Url.Page("/Blog/Index", 
-             new { p = id, search = Model.queryHttps.SearchBlog })
+        generateUrl = (int? id) => Url.Page("/Blog/Index", new { p = id, search = Model.queryHttps.SearchBlog })
     };
 
     var statusMessage = TempData["StatusMessage"];

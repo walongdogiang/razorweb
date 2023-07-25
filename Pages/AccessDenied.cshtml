@@ -1,0 +1,12 @@
+﻿@page
+@model AccessDeniedModel
+@{
+    ViewData["Title"] = "Từ chối truy cập";
+}
+
+<header>
+    <h1 class="text-danger">@ViewData["Title"]</h1>
+    <p class="text-danger">Bạn không đủ quyền hạn để truy cập trang này .</p>
+</header>
+
+<a href="javascript:void(0);" onclick="history.go(-1);" class="btn btn-secondary">Quay lại</a>

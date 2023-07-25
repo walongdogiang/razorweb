@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using EFWeb.Model;
 using EFWeb.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EFWeb.Pages_Blog
 {
+    [Authorize(Policy = "InGenZ")]
     public class DetailsModel : PageModel
     {
         private readonly EFWeb.Model.MyBlogContext _context;
