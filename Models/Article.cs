@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFWeb.Model
+namespace EFWeb.Models
 {
     // [Table("My_Article")] //nếu ko có dòng này, tên db sẽ lấy theo tên Class
     public class Article
@@ -14,7 +14,7 @@ namespace EFWeb.Model
         [Required(ErrorMessage = "{0} is null")]
         [Column(TypeName = "nvarchar")]
         [DisplayName("Title")]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [Required(ErrorMessage = "{0} is null")]
         [DataType(DataType.Date)]

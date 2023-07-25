@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using EFWeb.Model;
+using EFWeb.Models;
 using EFWeb.Helpers;
 using Microsoft.AspNetCore.Authorization;
 

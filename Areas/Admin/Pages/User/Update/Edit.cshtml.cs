@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using EFWeb.Model;
+using EFWeb.Models;
 using EFWeb.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

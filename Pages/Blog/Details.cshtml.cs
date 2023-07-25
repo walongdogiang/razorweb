@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using EFWeb.Model;
+using EFWeb.Models;
 using EFWeb.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
@@ -14,12 +14,12 @@ namespace EFWeb.Pages_Blog
     [Authorize(Policy = "InGenZ")]
     public class DetailsModel : PageModel
     {
-        private readonly EFWeb.Model.AppDbContext _context;
+        private readonly AppDbContext _context;
 
         [BindProperty(SupportsGet = true)]
         public QueryHttps queryHttps { get; set; }
 
-        public DetailsModel(EFWeb.Model.AppDbContext context)
+        public DetailsModel(AppDbContext context)
         {
             _context = context;
         }

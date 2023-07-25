@@ -1,5 +1,5 @@
 using EFWeb.Areas.Admin.Pages.Role;
-using EFWeb.Model;
+using EFWeb.Models;
 using EFWeb.Security.Requirements;
 using EFWeb.Services;
 using Microsoft.AspNetCore.Authorization;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace EFWeb.Model
+namespace EFWeb.Models
 {
     public class AppDbContext : IdentityDbContext<AppUser>
     {

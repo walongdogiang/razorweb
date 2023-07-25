@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFWeb.Model
+namespace EFWeb.Models
 {
     public class AppUser : IdentityUser
     {

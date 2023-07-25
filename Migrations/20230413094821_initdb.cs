@@ -1,7 +1,7 @@
 ﻿using System;
 using Bogus;
 using Bogus.DataSets;
-using EFWeb.Model;
+using EFWeb.Models;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
